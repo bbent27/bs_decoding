@@ -33,7 +33,7 @@ Fibonacci(20)
 library(ggplot2)
 # FROM MAX: later on, look up geom_path()
 ggplot(Fibonacci, aes(x=n,y=Fibonacci(n))+
-  geom_line()
+  geom_path()
 ggplot(aes)+geom_image(image="seahorse.png")
 
 library(numbers)
@@ -58,3 +58,10 @@ fibonacci_spiral <- function(n) {
 
 spiral_data <- fibonacci_spiral(10)
 plot(spiral_data$x, spiral_data$y, type = "l", asp = 1)
+
+x<- Fibonacci(20)
+y<-x
+for(i in 1:length(x)) {
+  x[i] <- x[i-1]
+}
+}
