@@ -57,11 +57,20 @@ fibonacci_spiral <- function(n) {
 }
 
 spiral_data <- fibonacci_spiral(10)
-plot(spiral_data$x, spiral_data$y, type = "l", asp = 1)
+plot(spiral_data$x, spiral_data, type = "l", asp = 1)
 
-x<- Fibonacci(20)
+n<-20
+x<- Fibonacci(n)
 y<-x
-for(i in 1:length(x)) {
-  x[i] <- x[i-1]
+for(i in 3:length(x)) {
+  x[i] <- x[i-1] + x[i-2]
 }
-}
+print(x)
+
+fib_data <- data.frame(
+  index=1:n,
+  value=x
+)
+
+ggplot(fib_data, aes (x=index, y=value))+
+  geom_path()
