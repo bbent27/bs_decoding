@@ -19,7 +19,6 @@ Fibonacci <- function(n) {
 }
 
 
-
 Fibonacci(20)
 Fibonacci(30)
 Fibonacci(5)
@@ -31,46 +30,54 @@ Fibonacci(20)
 # Fibonacci(c(6:10)) #(this wont work)
 
 library(ggplot2)
+library(rphylopic)
 # FROM MAX: later on, look up geom_path()
-ggplot(Fibonacci, aes(x=n,y=Fibonacci(n))+
-  geom_path()
-ggplot(aes)+geom_image(image="seahorse.png")
+ggplot(Fibonacci, aes(x=n,y=Fibonacci(n)))+
+  geom_path()+
+    geom_image(image="seahorse.png")
 
 library(numbers)
 fibonacci
 
-df <- data.frame(position = 1:length(fib_seq), value = fib_seq)
-ggplot(df, aes(x = positon, y= value)) +
-  geom_line()+
-  labs(title = "Fibonacci Sequence", x = "Position", y = "Value")
-rlang::last_trace()
+n <- 5
+Fibonacci(n)
 
-
-
-#plotting a spiral graph
-fibonacci_spiral <- function(n) {
-  fib_seq <- fibonacci(n)
-  theta <- seq(0, 2*pi, length.out = n)
-  x <- fib_seq * cos(theta)
-  y <- fib_seq * sin(theta)
-  return(data.frame(x=x, y=y))
-}
-
-spiral_data <- fibonacci_spiral(10)
-plot(spiral_data$x, spiral_data, type = "l", asp = 1)
-
-n<-20
-x<- Fibonacci(n)
-y<-x
-for(i in 3:length(x)) {
-  x[i] <- x[i-1] + x[i-2]
-}
-print(x)
-
-fib_data <- data.frame(
-  index=1:n,
-  value=x
-)
-
-ggplot(fib_data, aes (x=index, y=value))+
+# The output we want
+fib5_df <- data.frame(x = c(0, -1, -2, 0, 3),
+                      y = c(0, -1, 0,  2, -1))
+ggplot(fib5_df, aes(x, y)) +
   geom_path()
+
+n <- 9
+f <- Fibonacci(n)
+y <- x <- rep(0, n + 1)
+direction <- matrix(c(-1, -1, 1, 1,
+                      -1, 1, 1, -1),
+                    ncol = 2)
+for(i in 2:length(x)) {
+  x[i] <- x[i - 1] + f[i - 1] * direction[(i - 2) %% 4 + 1, 1]
+  y[i] <- y[i - 1] + f[i - 1] * direction[(i - 2) %% 4 + 1, 2]
+}
+
+fib_data <- data.frame(x, y)
+uuid <- get_uuid(name="Haliotis")
+img <- get_phylopic(uuid=uuid)
+ggplot(fib_data, aes(x, y))+
+  add_phylopic(img=img, height= 30, x=3.5, y=-7, angle = 90) +
+  geom_path(color="red", linewidth = 1) +
+  coord_fixed() +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+# x, y coordinates as follows:
+# -,- 1, 5, 9
+# -,+ 2, 6
+# +,- 3, 7
+# +,+ 4, 8
+
+img <- pick_phylopic(name="Haliotis", n=1, view=1)
+
+p<- ggplot()+
+  coord_cartesian(xlim=c(0.6,1.4), ylim=c(0.6,1.4))+
+  add_phylopic(img=img, x=1.25, y=1.25, height=.25)
+
